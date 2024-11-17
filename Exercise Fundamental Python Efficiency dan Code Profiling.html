@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width-device-width, initial-scale=1.0">
+    <title>Exercise Fundamental Python Efficiency dan Code Profiling</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="Judul">Exercise</h1>
+        </div>
+    </div>
+    
+<style>
+
+    body{
+        background-color: #fff;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .container{
+        width: 94%;
+        border: 0.1vw solid #4471c4;
+        border-radius: 1em;
+        padding-top: 1%;
+        padding-bottom: 1%;
+        padding-left: 4%;
+        padding-right: 3%;
+        padding-right: 10%;
+        margin-top: 3%;
+        margin-left: 3%;
+        margin-right: 3%;
+        background-color: aliceblue;
+        background: linear-gradient(25deg, #4471c4, #fff);  
+    }
+
+    .container .header{
+        color: navy;
+    }
+
+    .Judul{
+        max-width: 100%;
+        min-width: 30%;
+        font-size: 42px;
+        text-align: center;
+        font-weight: bolder;
+        margin: 1%;
+        margin-left: 5%;
+        font-family: calibri, Arial, sans-serif;
+    }
+
+    .content-box{
+        max-width: 100%;
+        min-width: 30%;
+        border: 0.1vw solid #4471c4;
+        border-radius: 1em;
+        background-color: ghostwhite;
+        box-shadow: 0.4vw 0.4vw 1.5vw rgba(0, 0, 0, 0.1);
+        font-family: Calibri, Arial, sans-serif;
+        font-size: 12px;
+        margin-left: 3%;
+        margin-right: 3%;
+        margin-top: 1%;
+        margin-bottom: 5%;
+        padding-left: 2%;
+        padding-right: 2%;
+        padding-bottom: 1%;
+        text-align: justify;
+    }
+
+    h1{
+        font-size: 26px; /* Ukuran font 18 */
+        font-weight: bold;
+        font-family: Calibri Arial sans-serif;
+        margin-top: 1.5%;
+        margin-bottom: 1.5%;
+        line-height: 1.5; /* Jarak spasi 1.5 */
+        text-align: justify;     
+    }
+
+    h2{
+        font-size: 20px; /* Ukuran font 16 */
+        font-family: Calibri Arial sans-serif;
+        margin-top: 1.5%;
+        margin-bottom: 1.5%;
+        line-height: 1.5; /* Jarak spasi 1.5 */
+        text-align: justify;
+    }
+
+    p{
+        font-size: 16px; /* Ukuran font 22 */
+        font-family: Calibri Arial sans-serif;
+        line-height: 1.5;    
+    }
+
+    /* Style for ul and ol */
+    ul, ol{
+        line-height: 1.5; /* Jarak spasi 1.5 */
+        list-style-type: decimal;
+        font-size: 18px; /* Ukuran font 18 */
+        margin-top: 1%;
+        margin-bottom: 1%;
+        margin-left: 5%;
+        font-family: Calibri, Arial, sans-serif;
+        text-align: justify;
+        max-width: 90vw;
+    }
+
+    ol{
+        font-size: 16px; /* Ukuran font 22 */
+        line-height: 1.5; /* Jarak spasi 1.5 */
+        list-style-type: decimal;
+        margin-top: 1%;
+        margin-bottom: 1%;
+        font-family: Calibri Arial sans-serif;
+        text-align: justify;
+    }
+
+    li{
+        font-size: 16px; /* Ukuran font 22 */
+        line-height: 1.5; /* Jarak spasi 1.5 */
+        margin-left: 2%;
+        font-family: Calibri Arial sans-serif;
+        text-align: justify;
+    }
+
+    table{
+        width: 85%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        margin-bottom: 15px;
+        margin-left: 10px;
+    }
+
+    .kotak {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 15px;
+    text-align: left;
+    border: 5px solid #ccc;
+    border-radius: 10px;
+    padding: 1.5vw;
+    line-height: 1.5;
+    width: 85%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: 5%;
+    background-color: grey;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+    .teks-tomato{
+    color: tomato;
+    font-weight: bold;
+    }
+
+    .teks-blue{
+        color: blue;
+        font-weight: bold;
+    }
+
+    .teks-sandybrown{
+        color: sandybrown;
+        font-weight: bold;
+    }
+
+    .teks-skyblue{
+        color: skyblue;
+        font-weight: bold;
+    }
+
+    .garis-bawah{
+        text-decoration: none; /*menghilangkan garis bawah bawaan*/
+        text-decoration-thickness: 2px; /*ketebalan teks*/
+        border-bottom: 2px solid black; /*garis di bawah teks*/
+        padding-bottom: 1px; /*jarak antara teks dan garis bawah*/
+    }
+
+    .margin-left{
+        margin-left: 7%;
+        color: skyblue;
+        font-weight: bold;
+    }
+
+
+    </style>
+
+    <div class="content-box"> <!--Berisi konten exercise--> 
+        <h1>
+            <span class="garis-bawah">Instruksi</span>
+        </h1>
+        <p>
+            Perusahaan retail besar, <b>XMart</b>, ingin menganalisis data penjualan bulanan mereka yang disimpan dalam array NumPy. Mereka memiliki data penjualan dalam bentuk total penjualan (dalam satuan juta) untuk setiap bulan dari beberapa cabang. 
+            Berikut adalah beberapa informasi mengenai data dan tujuan analisis yang ingin dilakukan:  
+        </p>
+        
+        <ol type="1">
+            <li>
+                <b>Data Penjualan Bulanan</b>: 
+                <p>
+                    Setiap elemen dalam array mewakili total penjualan bulanan dari setiap cabang perusahaan (dalam juta rupiah). Misalnya, data penjualan cabang dalam setahun disimpan dalam array NumPy sebagai berikut:
+                </p>
+            </li>
+            <p class="kotak" style="color: #fff;">
+                <span class="teks-sandybrown">sales_data = np.array([</span>
+                <br><span class="margin-left">[12, 15, 10, 20, 25, 30, 28, 35, 40, 45, 38, 42],</span> # Cabang 1
+                <br><span class="margin-left">[20, 18, 22, 25, 27, 32, 34, 36, 31, 29, 33, 30],</span> # Cabang 2
+                <br><span class="margin-left">[10, 12, 15, 17, 20, 23, 25, 28, 27, 30, 26, 24],</span> # Cabang 3
+                <br><span class="margin-left" style="margin-right: 1%;">[15, 16, 18, 19, 21, 25, 29, 33, 37, 35, 31, 28]</span> # Cabang 4
+                <br><span class="teks-sandybrown">])</span>
+            </p>
+
+            <li>
+                <b>Tujuan Analisis:</b>
+                <ul>
+                    <li>Total Penjualan Tahunan untuk Setiap Cabang: Hitung total penjualan tahunan untuk masing-masing cabang.</li>
+                    <li>Rata-Rata Penjualan Bulanan: Hitung rata-rata penjualan bulanan perusahaan (gabungan dari semua cabang).</li>
+                    <li>Cabang dengan Penjualan Tertinggi di Bulan Tertentu: Identifikasi cabang mana yang memiliki penjualan tertinggi di setiap bulan.</li>
+                    <li>Cabang Terbaik: Temukan cabang dengan penjualan tahunan tertinggi dan cabang dengan rata-rata penjualan bulanan tertinggi.</li>
+                    <li>Profiling Waktu dan Memori: Lakukan profiling waktu eksekusi dan memori untuk memastikan bahwa analisis dilakukan dengan efisien.</li>
+                </ul>
+            </li>
+        </ol>
+
+        <p>
+            <b>Berikan jawaban dalam bentuk kode Python dan sertakan analisis menggunakan profiling waktu dan memori.</b>
+        </p>
+
+        <h1>
+            <span class="garis-bawah">Output yang diharapkan</span>
+        </h1>
+        <p>
+            Output dari instruksi di atas, dapat anda lihat pada gambar berikut:
+        </p>
+        <ol type="1">
+            <li>Hasil Analisis</li>
+            <iframe src="https://drive.google.com/file/d/1HSmqMiUVItvTgZdIngC0tNMXWiTraKA_/preview" width="70%" height="150px" frame-border="0" style="margin-left: 2%; margin-bottom: 3%;" alt="Hasil Analisis"></iframe>
+
+            <li>Profiling Waktu</li>
+            <iframe src="https://drive.google.com/file/d/1xGz_wzzPyWTXuAIotM2fqBaTqkWNFwus/preview" width="70%" height="150px" frame-border="0" style="margin-left: 2%; margin-bottom: 3%;" alt="Profiling Waktu"></iframe>
+
+            <li>Profiling Memory</li>
+            <iframe src="https://drive.google.com/file/d/1P256T6zoU8JXaNn6kDkN17Hb92c16c_V/preview" width="70%" height="150px" frame-border="0" style="margin-left: 2%; margin-bottom: 3%;" alt="Profiling Memory"></iframe>
+        </ol>
+        
+
+
+    </div>
+
+
+    
+    </body>
+
+
+</html>

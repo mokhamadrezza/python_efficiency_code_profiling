@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fundamental Python Efficiency dan Code Profiling</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="Judul">Fundamental Python Efficiency dan Code Profiling</h1>
+        </div>
+<style>
+    
+body{
+    background-color: #fff;
+}
+
+.container{
+    background-color: #fff;
+    padding-top: 4%;
+    padding-left: 6%;
+    padding-right: 6%;
+    padding-bottom: 3%;
+}
+
+.container .header{
+    color: black;
+}
+
+.Judul{
+    font-size: 38px;
+    text-align: left;
+    font-weight: bolder;
+    margin: 1%;
+    font-family: Calibri, Arial, sans-serif;
+}
+
+.content-box{
+    max-width: 90vw;
+    min-width: 20%;
+    border: 0.1vw solid #4471C4;
+    background-color: #fff;
+    box-shadow: 0.4vw 0.4vw 1.5vw rgba(0, 0, 0, 0.1);
+    font-family: Calibri, Arial, sans-serif;
+    margin-left: 1%;
+    margin-bottom: 3%;
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 1%;
+    text-align: justify;
+}
+
+.content-box h2{
+    font-size: xx-large;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    display: inline-flex;
+    align-content: stretch;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    max-width: 90vw;
+}
+
+.content-box ul{
+    list-style-type: square;
+    padding-left: 2%;
+    margin-left: 1%;
+    font-size: 16px;
+    line-height: 2.5;
+    max-width: 90vw;
+}
+
+.content-box ul li{
+    max-width: 90vw;
+}
+
+.top-box{
+    margin-bottom: 0.5%;
+    max-width: 90vw;
+}
+
+.no-bullets{
+    list-style-type: none;
+    padding-left: 0;
+    max-width: 90vw;
+}
+
+.no-bullets ul{
+    padding-left: 3%; /* Menambahkan indentasi untuk daftar bersarang */
+    max-width: 90vw;
+}
+
+.note-box{
+    display: flex;
+    max-width: 90vw;
+    height: auto;
+    padding: 1%;
+    border-radius: 1vw;
+    border: 0.1vw solid #000;
+    background-color: #CFE1F3; /* Warna latar belakang seperti catatan */
+    box-shadow: 0.3vw 0.3vw 1vw rgba(0, 0, 0, 0.1);
+    font-family: Calibri, Arial, sans-serif;
+    position: relative;
+}
+
+.note-box span{
+    margin-top: 0%;
+    font-size: 1.6vw;
+    font-family: calibri, Arial, sans-serif;
+    text-align: justify;
+    max-width: 90vw;
+    font-weight: bolder;
+}
+
+.note-box h1{
+    margin-top: 0;
+    max-width: fit-content;
+    font-size: 30px;
+    font-family: Calibri, Arial, sans-serif;
+    text-align: justify;
+}
+
+.note-box p{
+    margin: 0;
+    max-width: 90vw;
+    font-size: 1.4vw;
+    font-family: Calibri, Arial, sans-serif;
+    text-align: justify;
+}
+/* Style for h1 */
+h1{
+    font-size: 36px; /* Ukuran font 18 */
+    font-weight: bolder;
+    font-family: Calibri, Arial, sans-serif;
+    color: #1f2855;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
+    margin-right: 1%;
+    line-height: 1.5; /* Jarak spasi 1.5 */
+    text-align: justify;
+    max-width: 90vw;
+}
+/* Style for h2 */
+h2{
+    font-size: 16px; /* Ukuran font 16 */
+    font-weight: bolder;
+    font-family: Calibri, Arial, sans-serif;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
+    margin-right: 1%;
+    line-height: 1.5; /* Jarak spasi 1.5 */
+    text-align: justify;
+    max-width: 90vw;
+}
+/*Style for h3 */
+h3 {
+    font-size: 14px; /* Ukuran font 14 */
+    font-weight: bolder;
+    font-family: calibri, Arial, sans-serif;
+    margin-top: 1.5%;
+    margin-bottom: 1.5%;
+    margin-right: 1%;
+    line-height: 1.5; /*Jarak spasi 1/5 */
+    text-align: justify;
+    max-width: 90vw;
+}
+/* Style for p */
+p{
+    line-height: 1.5; /* Jarak spasi 1.5 */
+    font-family: Calibri, Arial, sans-serif;
+    font-size: 18px; /* Ukuran font 18 */
+    text-align: justify;
+    margin-right: 1%;
+    margin-left: 1%;
+    max-width: 90vw;
+}
+/* Style for ul and ol */
+ul, ol{
+    line-height: 1.5; /* Jarak spasi 1.5 */
+    list-style-type: decimal;
+    font-size: 18px; /* Ukuran font 18 */
+    margin-top: 1%;
+    margin-bottom: 1%;
+    margin-left: 5%;
+    font-family: Calibri, Arial, sans-serif;
+    text-align: justify;
+    max-width: 90vw;
+}
+/* Style for li */
+li{
+    line-height: 1.5; /* Jarak spasi 1.5 */
+    font-family: Calibri, Arial, sans-serif;
+    text-align: justify;
+    margin-right: 1%;
+    max-width: 90vw;
+}
+
+.small-text{
+    line-height: 1.5; /* Jarak spasi 1.5 */
+    font-family: Calibri, Arial, sans-serif;
+    text-align: center;
+    font-size: 1vw;
+}
+
+.large-text {
+    line-height: 1.5; /* Jarak Spasi 1.5 */
+    font-family: Calibri, Arial, sans-serif;
+    text-align: center;
+    font-size: 1.2vw;
+    font-weight: bolder;
+    vertical-align: top;
+}
+
+.Tools{
+    max-width: 85%;
+    height: auto;
+    display: block;
+    margin-left: 30%;
+    margin-top: 15pt;
+    margin-bottom: 15pt;
+}
+
+.Tipe{
+    max-width: 85%;
+    height: auto;
+    display: block;
+    margin-left: 0%;
+    margin-top: 15pt;
+    margin-bottom: 15pt;
+}
+
+.pic {
+    display: block;
+    margin: 0;
+    padding: 20px;
+    height: auto;
+}
+
+iframe{
+    max-width: 100%;
+    min-height: auto;
+    margin-top: 1%;
+    margin-bottom: 1.5%;
+    margin-right: 1%;
+    margin-left: 2%;
+    border: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+table, th, td {
+    border: 0.1vw solid black;
+}
+th, td {
+    padding: 10px;
+    text-align: left;
+    line-height: 1.5; /* Jarak spasi 1.5 */
+    font-size: 1.2vw;
+}
+th {
+    background-color: #2796a3; /* Warna Latar Belakang untuk Baris Pertama */
+    color: white;
+    text-align: center;
+    font-size: 1.2vw;
+}
+tr:hover {
+    background-color: beige;
+}
+
+font {
+    max-width: 100%;
+}
+
+.kotak {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: left;
+    border: 5px solid #ccc;
+    border-radius: 10px;
+    padding: 1.5vw;
+    line-height: 1.5;
+    width: 80%;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: 5%;
+    background-color: grey;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.teks-tomato{
+    color: tomato;
+    font-weight: bold;
+}
+
+.teks-skyblue{
+    color: skyblue;
+    font-weight: bold;
+}
+
+.teks-sandybrown{
+    color: sandybrown;
+    font-weight: bold;
+}
+
+.margin-left{
+    margin-left: 7%;
+    font-weight: bold;
+}
+
+.margin-left2{
+    margin-left: 7%;
+    color: skyblue;
+    font-weight: bold;
+}
+
+.margin-left3{
+    margin-left: 10%; 
+    color: skyblue;
+    font-weight: bold;
+}
+
+</style>
+
+<div class="content-box"> <!-- Berisi Poin-poin Konten-->
+    <h2>
+        <img src="https://drive.google.com/thumbnail?id=1OSwy6Vn5jv8ERj5uV-d5abA8LFGNXV9x" alt="Content Image" style="vertical-align: middle; margin-right: 10px; width: 60px; height: 50px; padding-top: 10px;">Content
+    </h2>
+    <ul class="no-bullets" style="color: blue;">
+        <li><a href="#pengertian-efisiensi" style="color: blue;">Pengertian Efisiensi dalam Python</a></li>
+        <li><a href="#menulis-kode" style="color: blue;">Prinsip atau Panduan Menulis Kode Python</a></li>
+        <li><a href="#komponen-builtin" style="color: blue;">Komponen Built-in pada Python</a></li>
+        <li><a href="#builtin-range" style="color: blue;">Built-in Function – range()</a></li>
+        <li><a href="#builtin-enumerate" style="color: blue;">Built-in Function – enumerate()</a></li>
+        <li><a href="#builtin-map" style="color: blue;">Built-in Function – map()</a></li>
+        <li><a href="#numpy-array" style="color: blue;">NumPy (Numerical Python) Arrays</a></li>
+        <li><a href="#numpy-array-list" style="color: blue;">NumPy (Numerical Python) Arrays vs List</a></li>
+        <li><a href="#runnning-time-kode" style="color: blue;">Running Time Kode pada Python</a></li> 
+        <li><a href="#menyimpan-waktu-running" style="color: blue;">Menyimpan Waktu Running dalam Variabel (-o)</a></li>
+        <li><a href="#waktu-formal-name" style="color: blue;">Perbandingan Waktu Formal Name vs Literal Syntax</a></li>
+        <li><a href="#code-profiling" style="color: blue;">Code Profiling pada Python</a></li>
+    </ul>
+     
+</div>
+
+<div class="content">
+    
+    <!--Pengertian Efisiensi dalam Python-->
+    <h1 id="pengertian-efisiensi" style="margin-left: 1%;">Pengertian Efisiensi dalam Python</h1>
+    <p>
+        <b>Efisiensi dalam Python mengacu pada kemampuan program untuk menjalankan tugas-tugasnya dengan menggunakan sumber daya secara efisien, seperti memori dan waktu komputasi, dengan cara yang optimal.</b>
+    </p>
+    <p>
+        Suatu kode dapat dikatakan efisien apabila:
+        <ol type="1">
+            <li>Running time-nya cepat.</li>
+            <li>Konsumsi memori kecil.</li>
+            <li>Memiliki readability yang baik.</li>
+            <li>Menggunakan konstruksi pemrograman python (Pythonic).</li>
+        </ol>
+    </p>
+
+    <p>Berikut adalah contoh kode <b>non-pythonic</b>:</p>
+    <p class="kotak" style="color: #fff;">
+        #Non-Pythonic
+        <br><span class="teks-skyblue">numbers = [1, 2, 3, 4, 5]</span>
+        <br><span class="teks-skyblue">double_numbers = []</span>
+        <br><span class="teks-skyblue">for i in range(len(numbers)) :</span>
+        <br><span class="teks-skyblue" style="margin-left: 3%;">double_numbers.append(numbers[i]*2)</span>
+    </p>
+
+    <p>Berikut adalah contoh kode <b>pythonic</b>:</p>
+    <p class="kotak" style="color: #fff;">
+        #Non-Pythonic
+        <br><span class="teks-skyblue">double_numbers = [x * 2 for x in numbers]</span>
+    </p>
+
+
+    <!--Prinsip atau Panduan Menulis Kode Python-->
+    <h1 id="menulis-kode">Prinsip atau Panduan Menulis Kode Python</h1>
+    <p style="margin-left: 0;">
+        Dalam menulis kode Python terdapat panduan menulis kode yang dikemukakan oleh Tim Peters dengan istilah <b>“Zen of Python”</b>. 
+        Prinsip ini merangkum filosofi desain Python menjadi panduan untuk menulis kode Python yang bersih, mudah dibaca, dan sederhana. 
+        Berikut adalah beberapa prinsip utamanya:
+        <ol type="1">
+            <li>Indah lebih baik daripada jelek (Beautiful is better than ugly):</li>
+            <p style="margin-left: 0;">
+                Kode yang indah mudah dibaca dan dipahami. Prinsip ini mendorong penggunaan gaya penulisan yang rapi dan terstruktur, agar kode enak dilihat dan mudah dipelajari oleh programmer lain. 
+                Python mendukung ini dengan menyediakan sintaks yang konsisten, sehingga kode dapat terlihat lebih teratur dan profesional.
+            </p>
+            <li>Eksplisit lebih baik daripada implisit (Explicit is better than implicit):</li>
+            <p style="margin-left: 0;">
+                Kode harus jelas tentang apa yang sedang dilakukannya daripada membiarkan pembaca menebak-nebak. Hal ini berarti menulis kode yang lugas, menggunakan nama variabel dan fungsi yang deskriptif, serta menghindari penggunaan teknik yang terlalu rumit atau tidak langsung.
+            </p>
+            <li>Sederhana lebih baik daripada rumit (Simple is better than complex):</li>
+            <p style="margin-left: 0;">
+                Sederhana lebih mudah dipelihara dan kurang rentan terhadap bug. Prinsip ini menekankan pentingnya tidak membuat kode lebih kompleks dari yang seharusnya. Jika ada solusi sederhana, pilihlah solusi tersebut.
+            </p>
+            <li>Kompleks lebih baik daripada berbelit-belit (Complex is better than complicated):</li>
+            <p style="margin-left: 0;">
+                Ada kalanya kode harus kompleks untuk menangani kasus atau permasalahan yang rumit, tetapi kompleksitas tersebut harus tetap dapat dipahami. Kompleksitas harus dihindari sebisa mungkin, tetapi jika tidak dapat dihindari, pastikan bahwa logikanya jelas dan dapat diikuti.
+            </p>
+            <li>Keterbacaan menjadi faktor penting (Readability counts):</li>
+            <p style="margin-left: 0;">
+                Kode Python dirancang untuk dibaca dan dipahami dengan mudah oleh manusia. Struktur kode yang rapi, penamaan variabel yang jelas, dan penggunaan komentar seperlunya sangat membantu dalam meningkatkan keterbacaan.
+            </p>
+        </ol>
+    </p>
+
+
+    <!--Komponen Built-in pada Python-->
+    <h1 id="komponen-builtin">Komponen Built-in pada Python</h1>
+    <p style="margin-left: 0;">
+        Python memiliki berbagai komponen built-in yang sangat membantu dalam pemrograman. 
+        Berikut adalah beberapa komponen utama yang sudah tersedia secara default dalam bahasa Python:
+    </p>
+    <ol type="1">
+        <li>Tipe Data Dasar (Built-in Data Types)</li>
+        <p style="margin-left: 0;">
+            Python menyediakan beberapa tipe data dasar yang memudahkan pengolahan data secara langsung:
+            <ul>
+                <li><span class="teks-tomato">int</span>: untuk bilangan bulat, misalnya 5, 42, atau -3.</li>
+                <li><span class="teks-tomato">float</span>: untuk bilangan desimal, misalnya 3.14 atau 0.001.</li>
+                <li><span class="teks-tomato">str</span>: untuk string atau teks, misalnya "hello" atau "Python".</li>
+                <li><span class="teks-tomato">bool</span>: untuk nilai logika, True atau False.</li>
+                <li><span class="teks-tomato">list</span>: untuk kumpulan elemen yang berurutan dan dapat diubah, misalnya [1, 2, 3].</li>
+                <li><span class="teks-tomato">tuple</span>: untuk kumpulan elemen yang berurutan dan tidak dapat diubah, misalnya (1, 2, 3).</li>
+                <li><span class="teks-tomato">set</span>: untuk kumpulan elemen yang unik dan tidak berurutan, misalnya {1, 2, 3}.</li>
+                <li><span class="teks-tomato">dict</span>: untuk koleksi pasangan kunci-nilai (key-value pairs), misalnya {'name': 'Alice', 'age': 25}.</li>
+            </ul>
+        </p>
+
+        <li>Fungsi Built-in (Built-in Functions)</li>
+        <p style="margin-left: 0;">
+            Python memiliki sekitar 70 fungsi bawaan yang dapat digunakan langsung tanpa harus mengimpor modul tambahan. 
+            Beberapa fungsi yang sering digunakan meliputi:
+            <ul>
+                 <li><span class="teks-sandybrown">print()</span>: menampilkan output ke layar.</li>
+                 <li><span class="teks-sandybrown">len()</span>: mengembalikan panjang (jumlah elemen) dari objek, seperti string, list, atau tuple.</li>
+                 <li><span class="teks-sandybrown">type()</span>: mengembalikan tipe data dari objek.</li>
+                 <li><span class="teks-sandybrown">input()</span>: membaca input dari pengguna.</li>
+                 <li><span class="teks-sandybrown">sum()</span>: menjumlahkan elemen-elemen dalam list atau iterable lainnya.</li>
+            </ul>
+        </p>
+
+        <li>Modul Built-in (Built-in Modules)</li>
+        <p style="margin-left: 0;">
+            Python memiliki banyak modul built-in yang dapat diimpor untuk menambah fungsionalitas. Beberapa modul bawaan yang sering digunakan adalah:
+            <ul>
+                <li><span class="teks-tomato">math</span>: menyediakan fungsi matematika tingkat lanjut seperti sqrt, sin, cos, pi, dan lain-lain.</li>
+                <li><span class="teks-tomato">random</span>: menyediakan fungsi untuk menghasilkan angka acak, seperti randint, choice, dan shuffle.</li>
+                <li><span class="teks-tomato">datetime</span>: untuk menangani tanggal dan waktu.</li>
+                <li><span class="teks-tomato">os</span>: menyediakan antarmuka untuk berinteraksi dengan sistem operasi, seperti pengelolaan file dan direktori.</li>
+            </ul>
+        </p>
+    </ol>
+
+
+    <!--Built-in Function – range()-->
+    <h1 id="builtin-range">Built-in Function – range()</h1>
+    <p style="margin-left: 0;">
+        <b>Fungsi built-in <span class="teks-tomato">range()</span> di Python digunakan untuk menghasilkan deret angka dalam rentang tertentu</b>. Fungsi ini sering dipakai dalam loop for untuk iterasi. 
+        Fungsi <span class="teks-tomato">range()</span> menghasilkan objek tipe range, yang bersifat immutable dan lazy (artinya, tidak langsung menghasilkan semua elemen sekaligus, tetapi akan dihasilkan satu per satu saat diperlukan).
+    </p>
+    <p style="margin-left: 0;">
+        Berikut adalah contoh kode python tanpa menggunakan built in function <span class="teks-tomato">range()</span>:
+    </p>
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        #Cara 1
+        <br><span class="teks-skyblue">nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]</span>
+        <br><span class="teks-sandybrown">print(nums)</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    </p>
+
+    <p style="margin-left: 0;">
+        Apabila menggunakan fungsi <span class="teks-tomato">range()</span> maka akan menjadi:
+    </p>
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        #Cara 2
+        <br><span class="teks-skyblue">nums_list =list(range(0,11))</span>
+        <br><span class="teks-sandybrown">print(nums_list)</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    </p>
+
+    <p style="margin-left: 0;">
+        Ketika menggunakan built-in <span class="teks-tomato">range()</span> dengan <b>start point (0)</b> dan <b>endpoint (11)</b>, endpoint selalu <b>n+1</b>. 
+        Setelah itu, perlu menggunakan built <span class="teks-tomato">in list()</span>, agar hasil bertipe <b>list</b> seperti output di atas.
+    </p>
+
+    <p style="margin-left: 0;">
+        Contoh lain penggunaan fungsi <span class="teks-tomato">range()</span> dengan argumen <b>(start point, end point n+1, step point)</b> adalah sebagai berikut:
+    </p>
+
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        #Cara 3
+        <br><span class="teks-skyblue">even_list = list(range(2,11,2))</span>
+        <br><span class="teks-sandybrown">print(even_list)</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        [2, 4, 6, 8, 10]
+    </p>
+
+
+    <!--Built-in Function – enumerate()-->
+    <h1 id="builtin-enumerate">Built-in Function – enumerate()</h1>
+    <p style="margin-left: 0;">
+        <b>Fungsi built-in <span class="teks-tomato">enumerate()</span> di Python digunakan untuk mengiterasi objek yang bisa diiterasi (seperti list, tuple, atau string) sambil melacak indeks dari setiap elemen</b>. 
+        Fungsi ini sangat berguna ketika pengguna ingin mendapatkan indeks dan nilai dari elemen secara bersamaan dalam loop. Sintaks <span class="teks-tomato">enumerate()</span> adalah sebagai berikut:
+    </p>
+    <p class="kotak" style="color: #fff;">
+        <span class="teks-skyblue">enumerate(iterable, start=0)</span>
+    </p>
+
+    <p style="margin-left: 0;">
+        Parameter yang digunakan adalah sebagai berikut:
+        <ol type="1">
+            <li>iterable: objek yang bisa diiterasi seperti list, tuple, atau string.</li>
+            <li>start (opsional): indeks awal untuk penghitungan. Secara default, dimulai dari 0.</li>
+        </ol>
+    </p>
+    <p style="margin-left: 0;">
+        Contoh penggunaan <span class="teks-tomato">enumerate()</span> adalah sebagai berikut:
+    </p>
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        <span class="teks-skyblue">fruits = ['apple', 'banana', 'cherry']</span>
+        <br><span class="teks-skyblue">for index, fruit in enumerate(fruits):</span>
+        <br><span class="teks-sandybrown" style="margin-left: 5%;">print(index, fruit)</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        0 apple
+        <br>1 banana
+        <br>2 cherry
+    </p>
+
+    <p style="margin-left: 0;">
+        Contoh penggunaan <span class="teks-tomato">enumerate()</span> dengan parameter start adalah sebagai berikut:
+    </p>
+    <p class="kotak" style="color: #fff;">
+        <span class="teks-skyblue">fruits = ['apple', 'banana', 'cherry']</span>
+        <br><span class="teks-skyblue">for index, fruit in enumerate(fruits, start=5):</span>
+        <br><span class="teks-sandybrown" style="margin-left: 5%;">print(index, fruit)</span>
+    </p>
+
+
+    <!--Built-in Function – map()-->
+    <h1 id="builtin-map">Built-in Function – map()</h1>
+    <p style="margin-left: 0;">
+        <b>Fungsi built-in <span class="teks-tomato">map()</span> di Python digunakan untuk menerapkan sebuah fungsi pada setiap item dalam iterable (seperti list, tuple, atau string)</b>. 
+        Hasil dari <span class="teks-tomato">map()</span> adalah objek map (sejenis iterator) yang berisi hasil aplikasi fungsi pada setiap item dalam iterable. Berikut sintaks <span class="teks-tomato">map()</span>:
+    </p>
+    <p class="kotak" style="color: #fff;">
+        <span class="teks-skyblue">map(function, iterable, ...)</span>
+    </p>
+
+    <p style="margin-left: 0;">
+        Parameter yang digunakan adalah sebagai berikut:
+        <ol type="1">
+            <li>function: fungsi yang akan diterapkan pada setiap elemen dalam iterable. Fungsi ini dapat berupa fungsi bawaan, fungsi yang didefinisikan pengguna, atau fungsi anonim (lambda).</li>
+            <li>iterable: objek yang dapat diiterasi, seperti list, tuple, dll. map() juga mendukung beberapa iterable sebagai argumen.</li>
+        </ol>
+    </p>
+
+    <p style="margin-left: 0;">
+        Contoh penggunaan <span class="teks-tomato">map()</span> adalah sebagai berikut:
+    </p>
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        <span class="teks-skyblue">numbers = [1, 2, 3, 4, 5]</span>
+        <span class="teks-skyblue">doubled = map(lambda x: x * 2, numbers) # double all numbers in the list</span>
+        <span class="teks-sandybrown">print(list(doubled))</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        [2, 4, 6, 8, 10]
+    </p>
+
+    <p style="margin-left: 0;">
+        Contoh penggunaan <span class="teks-tomato">map()</span> dengan fungsi yang didefinisikan sendiri adalah sebagai berikut:
+    </p>
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        <span class="teks-skyblue">def square(x):</span>
+        <br><span class="teks-skyblue" style="margin-left: 5%;">return x ** 2</span> # square of a number
+        <br><span class="teks-skyblue">numbers = [1, 2, 3, 4, 5]</span>
+        <br><span class="teks-skyblue">squared = map(square, numbers)</span>
+        <br><span class="teks-sandybrown">print(list(squared))</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        [1, 4, 9, 16, 25]
+    </p>
+
+
+    <!--NumPy (Numerical Python) Arrays-->
+    <h1 id="numpy-array">NumPy (Numerical Python) Arrays</h1>
+    <p style="margin-left: 0;">
+        <b>NumPy (Numerical Python) adalah pustaka di Python yang dirancang khusus untuk komputasi numerik</b>. Salah satu fitur utama dari NumPy adalah array multi-dimensi yang sangat efisien, yang disebut ndarray (n-dimensional array). 
+        Array NumPy lebih cepat dan lebih efisien dalam pemrosesan data numerik dibandingkan list Python biasa, serta menyediakan berbagai fungsi dan operasi khusus yang memudahkan manipulasi data dalam berbagai bidang.
+    </p>
+    <p style="margin-left: 0;">
+        Berikut adalah contoh kode penggunaan numpy:
+    </p>
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        #Contoh 1
+        <br><span class="teks-sandybrown">import numpy as np</span>
+        <br><span class="teks-skyblue">nums_np_ints = np.array([1, 2, 3])</span>
+        <br><span class="teks-sandybrown">print(nums_np_ints)</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        [1 2 3]
+    </p>
+
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        <span class="teks-sandybrown">nums_np_ints.dtype</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        dtype('int32')
+    </p>
+
+    <p style="margin-left: 0;">
+        Untuk membangun numpy bertipe data float pengguna dapat memberikan satu input data yang bertipe data float seperti kode di bawah ini:
+    </p>    
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        #Contoh 2
+        <br><span class="teks-skyblue">nums_np_floats = np.array([1, 2.5, 3])</span>
+        <br><span class="teks-sandybrown">print(nums_np_floats)</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        [1.  2.5 3. ]
+    </p>
+
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        <span class="teks-sandybrown">nums_np_floats.dtype</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        dtype('float64')
+    </p>
+
+
+    <!--NumPy (Numerical Python) Arrays vs List-->
+    <h1 id="numpy-array-list">NumPy (Numerical Python) Arrays vs List</h1>
+    <p style="margin-left: 0;">
+        <b>NumPy arrays adalah struktur data dalam Python yang dioptimalkan untuk operasi numerik dan vektorisasi, sementara list adalah struktur data umum yang digunakan untuk menyimpan berbagai jenis data dalam Python</b>. 
+        Berikut adalah beberapa perbedaan Numpy dan List secara praktik:
+    </p>
+    <ol type="1">
+        <li>List Python menyimpan referensi ke objek individual. Karena tipe data setiap elemen di dalam list bisa berbeda, list Python membutuhkan lebih banyak memori dibandingkan array NumPy, terutama saat menyimpan banyak elemen.</li>
+        <p style="margin-left: 0;">Sedangkan Array NumPy menyimpan elemen dalam satu blok memori yang berkelanjutan dan hanya mendukung tipe data yang sama di seluruh elemen (misalnya, semua elemen harus berupa integer atau float). Ini menghemat memori dan membuat operasi menjadi lebih efisien.</p>
+
+        <li>Pada data yang berdimensi satu tidak ada perbedaan antara NumPy array dan list.</li>
+        <p style="margin-left: 0;">Berikut adalah contoh kode python untuk list 1 dimensi (1D):</p>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #List
+            <br><span class="teks-skyblue">nums = [-2, -1, 0, 1, 2]</span>
+            <br><span class="teks-sandybrown">nums[2]</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            0
+        </p>
+
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            <span class="teks-sandybrown">nums[-1]</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            2
+        </p>
+
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            <span class="teks-sandybrown">nums[1:4]</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            [-1, 0, 1]
+        </p>
+
+        <p style="margin-left: 0;">
+            Berikut adalah contoh kode python untuk array 1 dimensi (1D):
+        </p>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #Array
+            <br><span class="teks-skyblue">nums_np = [-2, -1, 0, 1, 2]</span>
+            <br><span class="teks-sandybrown">nums_np[2]</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            0
+        </p>
+
+        <p class="kotak" style="margin-bottom: -1.5%;">
+            <span class="teks-sandybrown">nums_np [-1]</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            2
+        </p>
+
+        <p class="kotak" style="margin-bottom: -1.5%;">
+            <span class="teks-sandybrown">nums_np[1:4]</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            array([-1,  0,  1])
+        </p>
+
+        <li>
+            Pada data dengan 2 dimensi, list tidak berlaku sistem kolom dan baris. Karena pada dasarnya, list adalah 1D.
+        </li>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #List
+            <br><span class="teks-skyblue">nums2 = [[1, 2, 3],</span>
+            <br><span class="teks-skyblue" style="margin-left: 9%;">[4, 5, 6]]</span>
+            <br><span class="teks-sandybrown">nums2</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            [[1, 2, 3], [4, 5, 6]]
+        </p>
+
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #Mengambil nilai 2
+            <br><span class="teks-sandybrown">nums2[0][1]</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            2
+        </p>
+
+        <p style="margin-left: 0;">
+            Pada objek nums2 memiliki 2 element yaitu [1,2,3] dan [4,5,6]. Sedangkan pada array dapat digunakan untuk dimensi 2 atau lebih seperti kode di bawah ini:
+        </p>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #Array
+            <br><span class="teks-skyblue">nums2_np = np.array(nums2)</span>
+            <br><span class="teks-sandybrown">nums2_np</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            array([[1, 2, 3],
+            <br><span class="margin-left">[4, 5, 6]])</span>
+        </p>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #Mengambil nilai 2
+            <br>#nums[baris,kolom]
+            <br><span class="teks-sandybrown">nums2_np[0,1]</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            2
+        </p>
+
+        <li>
+            List pada python tidak menyediakan fungsi matematika dan statistik bawaan untuk list. Untuk analisis data atau operasi numerik pada list, user memerlukan loop atau fungsi dari pustaka lain seperti math. 
+            Sedangkan NumPy menyediakan banyak fungsi matematika dan statistik, seperti <b>sum()</b>, <b>mean()</b>, <b>min()</b>, <b>max()</b>, dan <b>std()</b>, serta operasi kompleks seperti aljabar linear dan transformasi Fourier. 
+            Berikut adalah contoh kode python untuk operasi matematika dengan list:
+        </li>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #Dengan List
+            <br><span class="teks-skyblue">list_data = [1, 2, 3, 4, 5]</span>
+            <br><span class="teks-skyblue">list_mean = sum(list_data) / len(list_data)</span> # Perhitungan manual rata-rata
+            <br><span class="teks-sandybrown">list_mean</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            3.0
+        </p>
+
+        <p style="margin-left: 0;">
+            Untuk array dapat menggunakan contoh kode berikut
+        </p>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #Dengan NumPy array
+            <br><span class="teks-skyblue">array_data = np.array([1, 2, 3, 4, 5])</span>
+            <br><span class="teks-skyblue">array_mean = np.mean(array_data)</span> # Menggunakan fungsi bawaan NumPy
+            <br><span class="teks-sandybrown">array_mean</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            3.0
+        </p>
+    </ol>
+
+
+    <!--Running Time Kode pada Python-->
+    <h1 id="runnning-time-kode">Running Time Kode pada Python</h1>
+    <p style="margin-left: 0;">
+        <b>Running time (waktu eksekusi) kode di Python mengacu pada waktu yang diperlukan untuk menjalankan kode, berperan penting untuk menilai efisiensi suatu program. 
+            Running time suatu kode dapat bervariasi tergantung pada ukuran input dan kompleksitas algoritma yang digunakan.</b>
+    </p>
+    <p style="margin-left: 0;">
+        Di Jupyter Notebook atau IPython, pengguna dapat menggunakan magic command <span class="teks-tomato">%timeit</span> untuk mengukur running time suatu kode. 
+        Magic command adalah perintah khusus yang digunakan di lingkungan ini untuk menjalankan fungsi tambahan, termasuk pengukuran waktu, pemeriksaan memori, dan banyak lagi.
+    </p>
+    <p style="margin-left: 0;">
+        Berikut adalah contoh penggunaan <span class="teks-tomato">%timeit</span> pada python:
+    </p>
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        <span class="teks-sandybrown">import numpy as np</span>
+        <br><span class="teks-sandybrown">%timeit rand_nums = np.random.rand(1000)</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        5.46 µs ± 74.4 ns per loop (mean ± std. dev. of 7 runs, 100,000 loops each)’
+    </p>
+
+    <p style="margin-left: 0;">
+        Keterangan:
+        <ol type="1">
+            <li>Kode di atas adalah kode untuk mengetahui waktu running dari sebuah kode yang memilih 1000 angka random dari 0 sampai 1 dengan menggunakan np.random.</li>
+            <li>Gunakan magic command %timeit sebelum kode. Maka waktu running akan keluar.</li>
+            <li>Jumlah run adalah berapa kali pengulangan running kode. Pengulangan running kode memberikan hasil estimate waktu yang lebih akurat daripada hanya 1x running.</li>
+            <li>Jumlah loops menunjukan berapa kali kode dieksekusi setiap running.</li>
+            <li>Dari output di atas didapatkan lama waktu untuk setiap running adalah sebanyak 5.46 µs dengan standar deviasi dari 7 kali running adalah sebesar 74.4, di mana setiap running dilakukan looping sebanyak 100.000 kali.</li>
+        </ol>
+    </p>
+    <p>
+        Untuk mengatur jumlah run dan loop dapat menggunakan contoh kode berikut:
+    </p>
+    <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+        <span class="teks-sandybrown">%timeit -r2 -n10 rand_nums = np.random.rand(1000)</span>
+    </p>
+    <p class="kotak" style="color: #fff;">
+        13.6 µs ± 8.03 µs per loop (mean ± std. dev. of 2 runs, 10 loops each)
+    </p>
+    <p>
+        Terlihat hanya terdapat 2 kali run dengan jumlah loop setiap running-nya adalah 10 kali.
+    </p>
+
+
+    <!--Menyimpan Waktu Running dalam Variabel (-o)-->
+    <h1 id="menyimpan-waktu-running">Menyimpan Waktu Running dalam Variabel (-o)</h1>
+    <p style="margin-left: 0;">
+        <b>Di Jupyter Notebook atau IPython, pengguna dapat menyimpan hasil running time dari %timeit ke dalam variabel menggunakan opsi <span class="teks-tomato">-o</span></b>. Ini memungkinkan pengguna untuk melakukan analisis lebih lanjut pada waktu eksekusi yang tersimpan. 
+        Saat menggunakan <span class="teks-tomato">-o</span>, %timeit akan menyimpan informasi waktu running ke dalam objek yang berisi data detail dari eksekusi, seperti waktu rata-rata, jumlah loop, dan deviasi standar. Berikut adalah cara menggunakan %timeit <span class="teks-tomato">-o</span> :
+    </p>
+    <ol type="1">
+        <li>
+            <b>Menambahkan opsi -o ke %timeit</b> : Dengan menambahkan -o pada %timeit, hasil eksekusi waktu running akan disimpan ke dalam variabel.
+        </li>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            <span class="teks-sandybrown">result = %timeit -o sum([i ** 2 for i in range(1000)])</span> 
+        </p>
+        <p class="kotak" style="color: #fff;">
+            244 µs ± 2.28 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+        </p>
+
+        <li>
+            Mengakses informasi yang tersimpan: Setelah disimpan ke dalam variabel, pengguna bisa mengakses berbagai atribut yang ada pada objek hasil %timeit untuk mendapatkan detail running time.
+        </li>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #Simpan waktu eksekusi ke variabel
+            <br><span class="teks-skyblue">result = %timeit -o [i ** 2 for i in range(1000)]</span>
+            <br># Akses data hasil eksekusi
+            <br><span class="teks-sandybrown">print("Rata-rata waktu eksekusi:", result.average)</span>
+            <br><span class="teks-sandybrown">print("Deviasi standar:", result.stdev)</span>
+            <br><span class="teks-sandybrown">print("Waktu eksekusi terbaik:", result.best)</span>
+            <br><span class="teks-sandybrown">print("Waktu eksekusi terburuk:", result.worst)</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            236 µs ± 1.7 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+            <br>Rata-rata waktu eksekusi: 0.00023573005714297324
+            <br>Deviasi standar: 1.6975013804091825e-06
+            <br>Waktu eksekusi terbaik: 0.0002330458000001272
+            <br>Waktu eksekusi terburuk: 0.00023903040000004694
+        </p>
+    </ol>
+
+
+    <!--Perbandingan Waktu Formal Name vs Literal Syntax-->
+    <h1 id="waktu-formal-name">Perbandingan Waktu Formal Name vs Literal Syntax</h1>
+    <p style="margin-left: 0;">
+        Dalam Python, ada beberapa cara untuk membuat objek koleksi seperti list, set, dan dictionary. 
+        Dua pendekatan yang umum adalah menggunakan <b>formal name</b> (memanggil konstruktor) dan <b>literal syntax</b> (menggunakan tanda kurung langsung). 
+        Keduanya dapat menghasilkan hasil yang sama, namun waktu eksekusinya bisa berbeda.
+    </p>
+    <p style="margin-left: 0;">
+        Berikut adalah beberapa contoh perbandingan menggunakan formal name versus literal syntax dan waktu eksekusinya:
+    </p>
+    <ol type="1">
+        <li>Membuat Dictionary</li>
+        <p class="kotak" style="color: #fff; margin-bottom: -1.5%;">
+            #Mengukur waktu eksekusi pembuatan dictionary
+            <br><span class="teks-skyblue">dict_formal = %timeit -o dict()</span>
+            <br><span class="teks-skyblue">dict_literal = %timeit -o {}</span>
+            <br><span class="teks-sandybrown">print("Formal name (dict()):", dict_formal.average)</span>
+            <br><span class="teks-sandybrown">print("Literal syntax ({}):", dict_literal.average)</span>
+            <br>#Selisih waktu eksekusi
+            <br><span class="teks-skyblue">diff = dict_formal.average - dict_literal.average</span>
+            <br><span class="teks-sandybrown">print("Selisih waktu eksekusi:", diff)</span>
+        </p>
+        <p class="kotak" style="color: #fff;">
+            52.2 ns ± 0.839 ns per loop (mean ± std. dev. of 7 runs, 10,000,000 loops each)
+            <br>16.4 ns ± 0.226 ns per loop (mean ± std. dev. of 7 runs, 100,000,000 loops each)
+            <br>Formal name (dict()): 5.219795285713969e-08
+            <br>Literal syntax ({}): 1.6399830571428017e-08
+            <br>Selisih waktu eksekusi: 3.579812228571167e-08
+        </p>
+        <p style="margin-left: 0;">
+            Terlihat bahwa literal syntax lebih efisien karena memiliki running time yang lebih cepat.
+        </p>
+    </ol>
+
+
+    <!--Code Profiling pada Python-->
+    <h1 id="code-profiling">Code Profiling pada Python</h1>
+    <p style="margin-left: 0;">
+        <b>Code profiling dalam Python adalah proses untuk menganalisis performa suatu kode, termasuk mengidentifikasi fungsi atau bagian kode mana yang memakan waktu paling lama dan berapa kali bagian tersebut dipanggil</b>. 
+        Profiling sangat berguna untuk menemukan dan mengoptimalkan bottleneck dalam aplikasi Python. Dalam python terdapat dua macam code profiling:
+    </p>
+    <ol type="1">
+        <li>Waktu</li>
+        <p style="margin-left: 0;">
+            Beberapa hal yang penting dalam code profiling untuk waktu adalah sebagai berikut:
+            <ul>
+                <li>Analisa Detil Waktu Eksekusi: <span class="teks-tomato">line_profiler</span> memungkinkan user melihat berapa lama waktu yang dibutuhkan setiap baris kode dalam fungsi untuk dieksekusi. Profiling ini tidak hanya pada level fungsi, tetapi hingga ke setiap baris di dalam fungsi tersebut</li>
+                <li>Analisa Line by Line: <span class="teks-tomato">line_profiler</span> memberikan data statistik secara detail tentang durasi waktu yang dihabiskan pada setiap baris kode dalam fungsi. Analisis ini sangat berguna untuk mengidentifikasi baris mana yang menjadi bottleneck (bagian yang memperlambat keseluruhan performa).
+                <li>Menggunakan package <span class="teks-tomato">line_profiler</span>: <span class="teks-tomato">line_profiler</span> adalah package Python yang perlu diinstal terlebih dahulu. Setelah diinstal, user dapat menggunakannya dengan cara menambahkan dekorator <span class="teks-tomato">@profile</span> pada fungsi yang ingin dianalisis.</li>
+            </ul>
+        </p>
+
+        <p style="margin-left: 0;">
+            Berikut adalah contoh kode untuk code profiling waktu pada python:
+        </p>
+        <p class="kotak" style="color: #fff;">
+            <span class="teks-sandybrown">!pip install line_profiler</span>
+            <br><span class="teks-sandybrown">%load_ext line_profiler</span>
+            <br><span class="teks-sandybrown">import numpy as np</span>
+            <br>
+            <br><span class="teks-skyblue">heroes = ['Batman', 'Superman', 'Wonder Woman']</span>
+            <br><span class="teks-skyblue">hts = np.array([188.0, 191.0, 183.0])</span>
+            <br><span class="teks-skyblue">wts = np.array([95.0, 101.0, 74.0])</span>
+            <br><span class="teks-skyblue">def convert_units(heroes, heights, weights):</span>
+            <br><span class="margin-left2">new_hts = [ht * 0.39370 for ht in heights]</span> # Convert height to inches
+            <br><span class="margin-left2">new_wts = [wt * 2.20462 for wt in weights]</span> # Convert weight to pounds
+            <br>
+            <br><span class="margin-left2">hero_data = {}</span>
+            <br><span class="margin-left2">for i, hero in enumerate(heroes):</span>
+            <br><span class="margin-left3">hero_data[hero] = (new_hts[i], new_wts[i])</span>
+            <br>
+            <br><span class="margin-left2">return hero_data</span>
+            <br>
+            <br># Call the function
+            <br><span class="teks-sandybrown">convert_units(heroes, hts, wts)</span>
+            <br><span class="teks-sandybrown">%lprun -f convert_units convert_units(heroes, hts, wts)</span>
+        </p>
+
+        <p style="margin-left: 0;">
+            Output yang dihasilkan adalah sebagai berikut:
+        </p>
+        <iframe src="https://drive.google.com/file/d/1R7AuYLsD7czx-xrIi-qAxBmfOCUZUWAX/preview" width="90%" height="270px" style="margin-left: 0;" frame-border="0" alt="Gambar 1"></iframe>
+
+        <p style="margin-left: 0;">
+            Dengan penjelasan output sebagai berikut:
+            <ul>
+                <li><span class="teks-sandybrown">Line #</span> menunjukkan nomor baris dalam kode yang sedang diprofiling. Ini membantu user mengetahui baris spesifik yang dianalisis untuk durasi waktu eksekusinya.</li>
+                <li><span class="teks-sandybrown">Hits</span> menunjukkan berapa kali baris tersebut dijalankan (dieksekusi) selama pemanggilan fungsi.</li>
+                <li><span class="teks-sandybrown">Time</span> menunjukkan total waktu yang dihabiskan untuk menjalankan baris tersebut dalam satuan waktu tertentu (biasanya detik atau unit waktu yang lebih kecil seperti 1e-07 s pada output ini).</li>
+                <li><span class="teks-sandybrown">% Time</span> menunjukkan persentase waktu total eksekusi fungsi yang dihabiskan pada baris ini.</li>
+                <li><span class="teks-sandybrown">Line Contents</span> menampilkan kode dari baris tersebut untuk referensi, sehingga pengguna dapat melihat isi dari baris yang sedang dianalisis.</li>
+            </ul>
+        </p>
+
+        <p style="margin-left: 0;">
+            <span class="teks-sandybrown">%timeit</span> dan <span class="teks-sandybrown">%lprun - f</span> berbeda. Karena <span class="teks-sandybrown">%timeit</span> menggunakan beberapa kali pengulangan (loops) untuk menghitung rata-rata waktu running. 
+        </p>
+
+        <li>Memory</li>
+        <p style="margin-left: 0;">
+            <ul>
+                <li>Total Penggunaan Memori:</li>
+                <p style="margin-left: 0;">
+                    Mengukur berapa banyak memori yang digunakan oleh program secara keseluruhan selama eksekusi. 
+                    Ini memberikan gambaran umum tentang jejak memori program dan memungkinkan pengguna memahami kebutuhan memori minimum yang diperlukan.
+                </p>
+
+                <li>Penggunaan Memori per Fungsi atau Baris Kode</li>
+                <p style="margin-left: 0;">
+                    Mirip dengan profiling waktu eksekusi per baris, pengguna dapat mengukur penggunaan memori pada setiap baris kode atau fungsi tertentu. 
+                    Ini membantu mengidentifikasi bagian spesifik dari kode yang menggunakan banyak memori dan yang mungkin memerlukan optimasi. 
+                    Package seperti <span class="teks-tomato">memory_profiler</span> dapat digunakan untuk tujuan ini. Dengan <span class="teks-tomato">memory_profiler</span>, pengguna bisa melihat perubahan memori per baris.
+                </p>
+
+                <li>Objek Besar dalam Memori</li>
+                <p style="margin-left: 0;">
+                    Mengidentifikasi objek atau variabel besar dalam kode yang menggunakan memori secara signifikan, seperti data frame besar atau array besar. 
+                    Menyimpan data besar secara tidak efisien dapat mempengaruhi performa aplikasi, dan memerlukan optimalisasi pada struktur data atau algoritma yang digunakan.
+                </p>
+            </ul>
+
+            <p style="margin-left: 0;">
+                Berikut adalah contoh kode untuk code profiling memory pada python:
+            </p>
+            <p class="kotak" style="color: #fff;">
+                #Muat ekstensi memory_profiler
+                <br><span class="teks-sandybrown">!pip install memory_profiler</span>
+                <br><span class="teks-sandybrown">%load_ext memory_profiler</span>
+                <br>
+                <br>#Profiling fungsi convert_units
+                <br><span class="teks-sandybrown">from hero_func import convert_units</span> # Impor fungsi dari file
+                <br><span class="teks-sandybrown">import numpy as np</span>
+                <br>
+                <br>#Data untuk pemanggilan fungsi
+                <br><span class="teks-skyblue">heroes = ['Batman', 'Superman', 'Wonder Woman']</span>
+                <br><span class="teks-skyblue">hts = np.array([188.0, 191.0, 183.0])</span>
+                <br><span class="teks-skyblue">wts = np.array([95.0, 101.0, 74.0])</span>
+                <br>
+                <br>#Jalankan memory profiling dengan %mprun
+                <br><span class="teks-sandybrown">%mprun -f convert_units convert_units(heroes, hts, wts)</span>
+            </p>
+
+            <p style="margin-left: 0;">
+                Output yang dihasilkan adalah sebagai berikut:
+            </p>
+            <iframe src="https://drive.google.com/file/d/1Pu5pCz2rPKGqKF4b-vxuaC_pPxdzeoIw/preview" width="90%" height="220px" style="margin-left: 0;" frame-border="0" alt="Gambar 2"></iframe>
+
+            <p style="margin-left: 0;">
+                Dengan penjelasan output adalah sebagai berikut:
+                <ul>
+                    <li><span class="teks-sandybrown">Line #</span> : Ini menunjukkan nomor baris dalam kode sumber yang sedang dianalisis. Ini membantu user mengetahui kode yang mana penggunaan memori terjadi.</li>
+                    <li><span class="teks-sandybrown">Mem usage</span> : Kolom ini menunjukkan penggunaan memori total setelah baris tersebut dieksekusi. Biasanya, ini diukur dalam Megabyte (MB). Nilai ini membantu user memahami berapa banyak memori yang digunakan oleh program pada titik tertentu.</li>
+                    <li><span class="teks-sandybrown">Increment</span> : Kolom ini menunjukkan perubahan penggunaan memori yang terjadi setelah eksekusi baris tersebut dibandingkan dengan penggunaan memori sebelumnya. Jika sebuah baris menyebabkan peningkatan penggunaan memori, nilai ini akan menunjukkan berapa banyak memori yang ditambahkan. Jika penggunaan memori menurun, nilainya akan negatif.</li>
+                    <li><span class="teks-sandybrown">Occurrences</span> : Ini menunjukkan berapa kali baris tertentu dieksekusi dalam konteks fungsi tersebut. Ini berguna untuk memahami apakah penggunaan memori yang besar disebabkan oleh baris yang dijalankan berkali-kali.</li>
+                    <li><span class="teks-sandybrown">Line Contents</span> : Ini adalah konten dari baris kode itu sendiri. Dengan melihat konten baris ini, user dapat mengaitkan penggunaan memori dengan bagian tertentu dari kode, sehingga user dapat mengidentifikasi bagian mana yang mungkin menyebabkan penggunaan memori yang tinggi.</li>
+                </ul>
+            </p>
+        </p>
+        
+    </ol>
+
+    <p style="margin-left: 0;">
+        Kelemahan dari code profiling memory adalah fungsi yang akan diprofilkan harus disimpan ke dalam file lalu import nama fungsi tersebut. Contohnya yaitu menempatkan fungsi <span class="teks-sandybrown">convert_units</span> dalam file bernama <span class="teks-sandybrown">hero_func.py</span>.
+    </p>
+
+    <p style="margin-left: 0; margin-top: 2%;">
+        Berikut adalah video tutorial Fundamental Python Efficiency dan Code Profiling.
+    </p>
+    <iframe src="https://drive.google.com/file/d/1nMdgrz1SPR7R0hfD-Fi3rCaefh2RPv8Y/preview" width="95%" height="470px" style="margin-left: 1%; margin-bottom: 5%;" frame-border="0" allow="autoplay; fullscreen; accelerometer; encrypted-media; gyroscope; picture-in-picture;" alt="video tutorial"></iframe>
+
+
+
+</div>
+
+</body>
+
+</html>
